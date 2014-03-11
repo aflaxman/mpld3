@@ -23,5 +23,8 @@ def main():
     return fig
 
 if __name__ == '__main__':
+    import mpld3
     fig = main()
-    plt.show()
+    print(mpld3.fig_to_html(fig, 
+                            d3_url='mpld3/js/d3.v3.min.js',
+                            mpld3_url='mpld3/js/mpld3.v0.2git.js'))

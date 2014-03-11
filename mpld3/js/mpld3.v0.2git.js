@@ -503,11 +503,20 @@
 	    this.elements[i].draw();
 	}
     };
-    
+
     mpld3.Axes.prototype.enable_zoom = function(){
 	if(this.prop.zoomable){
 	    this.zoom.on("zoom", this.zoomed.bind(this));
 	    this.axes.call(this.zoom);
+
+	    // FIXME: need to get context right for everything in the monkey patch!
+	    this.zoom.zoom_orig = this.axes.on("wheel" + ".zoom")
+	    this.zoom.zoom_new = function() {
+		console.log("hello, world");
+		this.zoom.zoom_orig();
+	    }
+	    this.axes.on("wheel.zoom", this.zoom.zoom_new)
+
 	    this.axes.style("cursor", 'move');
 	}
     };
