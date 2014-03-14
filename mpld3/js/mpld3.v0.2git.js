@@ -509,19 +509,35 @@
 	    this.zoom.on("zoom", this.zoomed.bind(this));
 	    this.axes.call(this.zoom);
 
-	    // FIXME: need to get context right for everything in the monkey patch!
-	    //debugger;
-	    var zoom_orig = this.axes.on("wheel" + ".zoom");
-	    this.zoom.zoom_new = function() {
-		console.log("hello, world");
-		zoom_orig.bind(this);
-		zoom_orig();
+	    var wheel_zoom = this.axes.on("wheel" + ".zoom"),
+	        axes = this.axes,
+	        wheel_zoom_timeout;
+	    function enable_wheel_zoom(){
+		console.log("enable wheel zoom");
+		axes.on("wheel.zoom", wheel_zoom);
+	    }
+	    function disable_wheel_zoom(){
+		console.log("disable wheel zoom");
+		axes.on("wheel.zoom", null);
 	    }
 
-	    this.zoom.zoom_new.bind(this.zoom);
-	    zoom_orig.bind(this.zoom);
+	    // create a mouseenter event listener that
+	    // registers a callback that enables the original wheel zoom
+	    this.axes.on("mouseenter.zoom", function(){
+		    console.log("mouse entered axes");
 
-	    this.axes.on("wheel.zoom", this.zoom.zoom_new)
+		    wheel_zoom_timeout = setTimeout(enable_wheel_zoom, 200);
+
+		    // reset the timeout if the wheel is used before time time runs out
+		    axes.on("wheel.zoom", function(){
+			    clearTimeout(wheel_zoom_timeout);
+			    wheel_zoom_timeout = setTimeout(enable_wheel_zoom, 200);
+			});
+		});
+		
+	    // disable wheel zoom via mouseleave callback (and initially)
+	    disable_wheel_zoom();
+	    this.axes.on("mouseleave.zoom", disable_wheel_zoom)
 
 	    this.axes.style("cursor", 'move');
 	}
