@@ -510,11 +510,17 @@
 	    this.axes.call(this.zoom);
 
 	    // FIXME: need to get context right for everything in the monkey patch!
-	    this.zoom.zoom_orig = this.axes.on("wheel" + ".zoom")
+	    //debugger;
+	    var zoom_orig = this.axes.on("wheel" + ".zoom");
 	    this.zoom.zoom_new = function() {
 		console.log("hello, world");
-		this.zoom.zoom_orig();
+		zoom_orig.bind(this);
+		zoom_orig();
 	    }
+
+	    this.zoom.zoom_new.bind(this.zoom);
+	    zoom_orig.bind(this.zoom);
+
 	    this.axes.on("wheel.zoom", this.zoom.zoom_new)
 
 	    this.axes.style("cursor", 'move');
