@@ -251,7 +251,7 @@
 			  active: !this.toolbar.fig.zoom_on});},
 	draw: function(){
 	    mpld3.BaseButton.prototype.draw.apply(this);
-	    this.toolbar.fig.disable_zoom();},
+	    this.toolbar.fig.enable_zoom();},
 	deactivate: function(){
 	    this.toolbar.fig.disable_zoom();
 	    this.toolbar.toolbar.selectAll(".mpld3-movebutton")
@@ -517,29 +517,30 @@
 		this.axes.on(mpld3_zoomWheel + ".zoom", null);
 	    }
 
-	    var wheel_zoom = this.axes.on("wheel" + ".zoom"),
+	    var wheel_zoom = this.axes.on(mpld3_zoomWheel + ".zoom"),
 	        axes = this.axes,
 	        wheel_zoom_timeout;
 	    function enable_wheel_zoom(){
-		console.log("enable wheel zoom");
-		axes.on("wheel.zoom", wheel_zoom);
+		//console.log("enable wheel zoom");
+		axes.on(mpld3_zoomWheel + ".zoom", wheel_zoom);
 	    }
 	    function disable_wheel_zoom(){
-		console.log("disable wheel zoom");
-		axes.on("wheel.zoom", null);
+		//console.log("disable wheel zoom");
+		axes.on(mpld3_zoomWheel + ".zoom", null);
+		clearTimeout(wheel_zoom_timeout);
 	    }
 
 	    // create a mouseenter event listener that
 	    // registers a callback that enables the original wheel zoom
 	    this.axes.on("mouseenter.zoom", function(){
-		    console.log("mouse entered axes");
+		    //console.log("mouse entered axes");
 
-		    wheel_zoom_timeout = setTimeout(enable_wheel_zoom, 200);
+		    wheel_zoom_timeout = setTimeout(enable_wheel_zoom, 500);
 
 		    // reset the timeout if the wheel is used before time time runs out
-		    axes.on("wheel.zoom", function(){
+		    axes.on(mpld3_zoomWheel + ".zoom", function(){
 			    clearTimeout(wheel_zoom_timeout);
-			    wheel_zoom_timeout = setTimeout(enable_wheel_zoom, 200);
+			    wheel_zoom_timeout = setTimeout(enable_wheel_zoom, 500);
 			});
 		});
 		
