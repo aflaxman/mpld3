@@ -42,6 +42,9 @@ nosetests.xml
 # ipython
 .ipynb_checkpoints
 
+# matplotlib
+matplotlibrc
+
 # documentation
 doc/_build
 doc/examples
@@ -57,3 +60,6 @@ node_modules
 # testing outputs
 _pngs
 _test_plots.html
+test_plots.html
+test_plots/*.png
+test_plots/*.html
